@@ -1,0 +1,954 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BIZZ+ · Réseau d'affaires — Animation de réunion</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Montserrat:wght@600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#16242e; --ink2:#3c5263; --mute:#8a9aab;
+  --bg:#f4f7fa; --card:#ffffff; --border:#e4ebf2; --border-soft:#eef3f8;
+  --blue:#1f6fb2; --blue-deep:#134e80; --blue-soft:#e8f1fa;
+  --green:#159a73; --green-deep:#0d7457; --green-soft:#e6f5ef;
+  --gold:#dca22c; --gold-deep:#b67f14; --gold-soft:#fbf2da;
+  --danger:#d2473f;
+  --shadow:0 1px 2px rgba(20,40,60,.04), 0 8px 24px rgba(20,40,60,.06);
+  --shadow-lg:0 12px 40px rgba(20,40,60,.14);
+  --r:16px; --r-sm:11px;
+  --font:"Manrope",system-ui,sans-serif; --display:"Montserrat",system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{font-family:var(--font);background:var(--bg);color:var(--ink);line-height:1.5;-webkit-font-smoothing:antialiased}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+input{font-family:inherit}
+a{color:inherit}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+.svi{width:1em;height:1em;display:inline-block;vertical-align:-.14em;stroke:currentColor;fill:none;
+  stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
+.svi.fill{fill:currentColor;stroke:none}
+
+/* ============ LOGIN ============ */
+.login{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;
+  background:radial-gradient(1200px 600px at 80% -10%,rgba(31,111,178,.12),transparent 60%),
+             radial-gradient(900px 500px at 0% 110%,rgba(21,154,115,.12),transparent 55%),var(--bg)}
+.login-card{width:100%;max-width:410px;background:var(--card);border:1px solid var(--border);
+  border-radius:22px;box-shadow:var(--shadow-lg);padding:38px 34px;animation:rise .5s ease both}
+.brandmark{display:flex;align-items:baseline;gap:3px;justify-content:center;margin-bottom:4px}
+.brandmark b{font-family:var(--display);font-weight:900;font-size:40px;letter-spacing:-1.5px;color:var(--ink)}
+.brandmark .plus{font-family:var(--display);font-weight:900;font-size:40px;color:var(--gold);line-height:1}
+.brand-base{text-align:center;color:var(--mute);font-size:12px;font-weight:600;letter-spacing:3px;text-transform:uppercase;margin-bottom:26px}
+.login h1{font-family:var(--display);font-size:19px;font-weight:700;text-align:center;margin-bottom:4px}
+.login .sub{text-align:center;color:var(--ink2);font-size:13.5px;margin-bottom:24px}
+.field{margin-bottom:13px}
+.field label{display:block;font-size:11.5px;font-weight:700;color:var(--ink2);margin-bottom:6px;letter-spacing:.3px}
+.field input{width:100%;padding:13px 14px;border:1.5px solid var(--border);border-radius:var(--r-sm);
+  font-size:15px;color:var(--ink);background:#fbfdff;transition:border-color .15s,box-shadow .15s}
+.field input:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px var(--blue-soft)}
+.btn-primary{width:100%;padding:14px;border-radius:var(--r-sm);font-weight:700;font-size:15px;
+  background:var(--ink);color:#fff;transition:transform .12s,background .15s;margin-top:6px}
+.btn-primary:hover{background:#0d1820;transform:translateY(-1px)}
+.btn-primary:active{transform:translateY(0)}
+.login-hint{margin-top:18px;padding:12px 14px;background:var(--gold-soft);border-radius:var(--r-sm);
+  font-size:12px;color:var(--gold-deep);text-align:center;line-height:1.45}
+.login-hint b{font-weight:800}
+.demo-tag{display:inline-flex;align-items:center;gap:6px;font-size:10px;font-weight:800;letter-spacing:1.5px;
+  color:var(--green-deep);background:var(--green-soft);padding:5px 11px;border-radius:20px;margin-bottom:18px}
+.demo-tag .dot{width:6px;height:6px;border-radius:50%;background:var(--green)}
+.login-foot{margin-top:22px;font-size:11.5px;color:var(--mute);text-align:center;font-weight:600}
+.login-foot b{color:var(--ink2);font-weight:700}
+
+/* ============ APP SHELL ============ */
+.app{display:none;min-height:100vh;flex-direction:column}
+.app.on{display:flex;animation:fade .4s ease}
+.topbar{position:sticky;top:0;z-index:30;background:rgba(255,255,255,.86);backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border);padding:0 clamp(14px,4vw,30px)}
+.topbar-in{max-width:1180px;margin:0 auto;height:62px;display:flex;align-items:center;gap:14px}
+.tb-brand{display:flex;align-items:baseline;gap:2px}
+.tb-brand b{font-family:var(--display);font-weight:900;font-size:23px;letter-spacing:-1px}
+.tb-brand .plus{font-family:var(--display);font-weight:900;font-size:23px;color:var(--gold)}
+.tb-role{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:800;letter-spacing:.6px;
+  color:var(--blue-deep);background:var(--blue-soft);padding:5px 10px;border-radius:20px;margin-left:9px;
+  border:1.5px solid transparent;transition:border-color .15s,background .15s}
+.tb-role:hover{border-color:var(--blue)}
+.tb-role .svi{width:13px;height:13px}
+.tb-role .chev{width:11px;height:11px;opacity:.7}
+.tb-demo{font-size:10px;font-weight:800;letter-spacing:1.4px;color:var(--gold-deep);background:var(--gold-soft);
+  padding:4px 9px;border-radius:20px;margin-left:6px}
+.tb-spacer{flex:1}
+.tb-meet{display:flex;flex-direction:column;align-items:flex-end;line-height:1.2}
+.tb-meet .lab{font-size:10.5px;color:var(--mute);font-weight:700;letter-spacing:.4px;text-transform:uppercase}
+.tb-meet .val{font-size:13.5px;font-weight:700;color:var(--ink)}
+.tb-btn{display:inline-flex;align-items:center;gap:7px;padding:8px 13px;border-radius:10px;font-size:13px;font-weight:700;
+  background:var(--card);border:1.5px solid var(--border);transition:border-color .15s,background .15s}
+.tb-btn .svi{width:16px;height:16px}
+.tb-btn:hover{border-color:var(--blue);background:var(--blue-soft)}
+.tb-btn.proj{background:var(--ink);color:#fff;border-color:var(--ink)}
+.tb-btn.proj:hover{background:#0d1820}
+
+.nav{position:sticky;top:62px;z-index:20;background:rgba(255,255,255,.9);backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--border);overflow-x:auto;scrollbar-width:none}
+.nav::-webkit-scrollbar{display:none}
+.nav-in{max-width:1180px;margin:0 auto;display:flex;gap:2px;padding:0 clamp(10px,4vw,30px)}
+.nav button{display:inline-flex;align-items:center;gap:8px;padding:14px 15px;font-size:13.5px;font-weight:700;
+  color:var(--ink2);white-space:nowrap;border-bottom:2.5px solid transparent;transition:color .15s,border-color .15s}
+.nav button .svi{width:16px;height:16px}
+.nav button:hover{color:var(--ink)}
+.nav button.act{color:var(--blue-deep);border-bottom-color:var(--blue)}
+
+main{flex:1;max-width:1180px;width:100%;margin:0 auto;padding:clamp(20px,4vw,34px) clamp(14px,4vw,30px) 50px}
+.view{display:none;animation:fade .35s ease}
+.view.on{display:block}
+.vhead{margin-bottom:20px;display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.vhead h2{font-family:var(--display);font-size:clamp(20px,3vw,26px);font-weight:800;letter-spacing:-.5px}
+.vhead p{color:var(--ink2);font-size:14px;margin-top:3px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);box-shadow:var(--shadow)}
+
+/* ===== DASHBOARD ===== */
+.next-meet{padding:22px 24px;display:flex;align-items:center;gap:22px;flex-wrap:wrap;margin-bottom:16px;
+  background:linear-gradient(120deg,var(--ink),#1d3340);color:#fff;border:none;position:relative;overflow:hidden}
+.next-meet::after{content:"";position:absolute;right:-40px;top:-40px;width:200px;height:200px;border-radius:50%;
+  background:radial-gradient(circle,rgba(220,162,44,.35),transparent 70%)}
+.nm-date{text-align:center;border-right:1px solid rgba(255,255,255,.16);padding-right:22px;z-index:1}
+.nm-date .d{font-family:var(--display);font-size:34px;font-weight:900;line-height:1}
+.nm-date .m{font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-top:3px}
+.nm-info{z-index:1}
+.nm-info .t{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.6)}
+.nm-info h3{font-family:var(--display);font-size:19px;font-weight:700;margin:2px 0 5px}
+.nm-info .l{font-size:13.5px;color:rgba(255,255,255,.78);display:flex;align-items:center;gap:7px}
+.nm-info .l .svi{width:15px;height:15px;color:var(--gold)}
+.nm-cta{margin-left:auto;z-index:1}
+.nm-cta button{display:inline-flex;align-items:center;gap:7px;padding:11px 18px;border-radius:11px;font-weight:700;
+  font-size:13.5px;background:var(--gold);color:var(--ink)}
+.nm-cta button .svi{width:16px;height:16px}
+.nm-cta button:hover{background:#e8b13d}
+
+.human-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px}
+@media(max-width:620px){.human-row{grid-template-columns:1fr}}
+.hcard{padding:18px 20px;display:flex;gap:15px;align-items:center}
+.hcard .hi{width:46px;height:46px;border-radius:13px;display:grid;place-items:center;flex-shrink:0}
+.hcard .hi .svi{width:22px;height:22px}
+.hcard .lab{font-size:10.5px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--mute)}
+.hcard h3{font-family:var(--display);font-size:16px;font-weight:700;margin:2px 0 3px}
+.hcard .meta{font-size:12.5px;color:var(--ink2)}
+.hcard .act{margin-left:auto;flex-shrink:0}
+.hcard .act button{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:700;color:var(--gold-deep);
+  background:var(--gold-soft);padding:8px 12px;border-radius:9px;white-space:nowrap}
+.hcard .act button .svi{width:15px;height:15px}
+.hcard .act button:hover{background:#f6e7c4}
+
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));gap:14px;margin-bottom:22px}
+.stat{padding:18px 20px}
+.stat .chip{width:38px;height:38px;border-radius:10px;display:grid;place-items:center;margin-bottom:12px}
+.stat .chip .svi{width:20px;height:20px}
+.stat .n{font-family:var(--display);font-size:30px;font-weight:800;letter-spacing:-1px;line-height:1}
+.stat .lab{font-size:12.5px;color:var(--ink2);font-weight:600;margin-top:3px}
+.i-blue{background:var(--blue-soft);color:var(--blue-deep)}
+.i-green{background:var(--green-soft);color:var(--green-deep)}
+.i-gold{background:var(--gold-soft);color:var(--gold-deep)}
+.i-mute{background:#eef2f6;color:var(--ink2)}
+
+.stars-card{padding:22px 24px}
+.stars-card .ttl{display:flex;align-items:center;gap:9px;font-family:var(--display);font-size:15px;font-weight:700;margin-bottom:16px}
+.stars-card .ttl .svi{width:19px;height:19px;color:var(--gold)}
+.stars-card .ttl .badge{font-size:10px;font-weight:800;letter-spacing:1px;background:var(--gold-soft);color:var(--gold-deep);padding:3px 9px;border-radius:20px}
+.stars-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+.star{display:flex;gap:14px;align-items:center;padding:14px;border:1px solid var(--gold-soft);
+  background:linear-gradient(135deg,#fffdf8,var(--gold-soft));border-radius:var(--r-sm)}
+.star .av{width:52px;height:52px;border-radius:13px;display:grid;place-items:center;font-family:var(--display);font-weight:800;font-size:18px;color:#fff;flex-shrink:0}
+.star .nm{font-weight:800;font-size:15px}
+.star .mt{font-size:12.5px;color:var(--ink2)}
+.star .tg{font-size:11.5px;color:var(--gold-deep);font-weight:700;margin-top:3px;display:flex;align-items:center;gap:5px}
+.star .tg .svi{width:13px;height:13px}
+
+/* ===== ANNUAIRE ===== */
+.dir-toggle{display:inline-flex;background:var(--card);border:1.5px solid var(--border);border-radius:11px;padding:3px;gap:2px}
+.dir-toggle button{display:inline-flex;align-items:center;gap:6px;padding:7px 13px;border-radius:8px;font-size:12.5px;font-weight:700;color:var(--ink2)}
+.dir-toggle button .svi{width:15px;height:15px}
+.dir-toggle button.sel{background:var(--ink);color:#fff}
+.search{display:flex;align-items:center;gap:10px;background:var(--card);border:1.5px solid var(--border);
+  border-radius:12px;padding:11px 15px;margin-bottom:18px;max-width:380px}
+.search .svi{width:18px;height:18px;color:var(--mute)}
+.search input{border:none;background:none;outline:none;font-size:14.5px;width:100%;color:var(--ink)}
+.dir{display:grid;grid-template-columns:repeat(auto-fill,minmax(255px,1fr));gap:15px}
+.mcard{padding:18px;transition:transform .15s,box-shadow .15s}
+.mcard:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg)}
+.mc-top{display:flex;gap:13px;align-items:center;margin-bottom:13px}
+.mc-av{width:50px;height:50px;border-radius:13px;display:grid;place-items:center;font-family:var(--display);font-weight:800;font-size:17px;color:#fff;flex-shrink:0}
+.mc-nm{font-weight:800;font-size:15.5px;line-height:1.2}
+.mc-jb{font-size:12.5px;color:var(--blue-deep);font-weight:700;margin-top:2px}
+.mc-co{font-size:12.5px;color:var(--mute)}
+.mc-exp{font-size:12.5px;color:var(--ink2);background:var(--bg);border:1px solid var(--border-soft);
+  border-radius:9px;padding:8px 11px;margin-bottom:13px;line-height:1.4}
+.mc-acts{display:flex;gap:7px}
+.mc-acts button{flex:1;height:36px;border-radius:9px;display:grid;place-items:center;
+  background:var(--bg);border:1px solid var(--border);transition:background .14s,border-color .14s,transform .1s}
+.mc-acts button .svi{width:17px;height:17px}
+.mc-acts button:hover{transform:translateY(-1px)}
+.mc-acts .tel:hover{background:var(--blue-soft);border-color:var(--blue);color:var(--blue-deep)}
+.mc-acts .mail:hover{background:var(--green-soft);border-color:var(--green);color:var(--green-deep)}
+.mc-acts .wa:hover{background:var(--green-soft);border-color:var(--green);color:var(--green-deep)}
+.mc-acts .vc:hover{background:var(--gold-soft);border-color:var(--gold);color:var(--gold-deep)}
+/* list mode */
+.dlist{display:flex;flex-direction:column;gap:0;overflow:hidden}
+.drow{display:flex;align-items:center;gap:14px;padding:13px 16px;border-bottom:1px solid var(--border-soft);transition:background .12s}
+.drow:last-child{border-bottom:none}
+.drow:hover{background:var(--bg)}
+.dr-av{width:42px;height:42px;border-radius:11px;display:grid;place-items:center;font-family:var(--display);font-weight:800;font-size:15px;color:#fff;flex-shrink:0}
+.dr-id{min-width:170px;flex:1 1 200px}
+.dr-id .nm{font-weight:800;font-size:14.5px}
+.dr-id .jb{font-size:12.5px;color:var(--blue-deep);font-weight:700}
+.dr-id .co{font-size:12px;color:var(--mute)}
+.dr-coord{flex:1 1 200px;display:flex;flex-direction:column;gap:3px;min-width:160px}
+.dr-coord a{display:inline-flex;align-items:center;gap:7px;font-size:12.5px;color:var(--ink2);font-weight:600;text-decoration:none;width:fit-content}
+.dr-coord a .svi{width:14px;height:14px;color:var(--mute)}
+.dr-coord a:hover{color:var(--blue-deep)}
+.dr-coord a:hover .svi{color:var(--blue)}
+.dr-acts{display:flex;gap:6px;flex-shrink:0}
+.dr-acts button{width:36px;height:36px;border-radius:9px;display:grid;place-items:center;background:var(--bg);border:1px solid var(--border);transition:.13s}
+.dr-acts button .svi{width:16px;height:16px}
+.dr-acts .wa:hover{background:var(--green-soft);border-color:var(--green);color:var(--green-deep)}
+.dr-acts .vc:hover{background:var(--gold-soft);border-color:var(--gold);color:var(--gold-deep)}
+@media(max-width:620px){.dr-coord{flex-basis:100%}.dr-id{flex-basis:60%}}
+
+/* ===== CALENDRIER ===== */
+.evt{display:flex;gap:18px;padding:18px 20px;margin-bottom:13px;align-items:center;flex-wrap:wrap}
+.evt-date{text-align:center;background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:11px 15px;min-width:74px;flex-shrink:0}
+.evt-date .d{font-family:var(--display);font-size:25px;font-weight:900;line-height:1;color:var(--ink)}
+.evt-date .m{font-size:10.5px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--blue-deep);margin-top:2px}
+.evt-body{flex:1;min-width:180px}
+.evt-body h3{font-family:var(--display);font-size:16px;font-weight:700}
+.evt-body .loc{font-size:13px;color:var(--ink2);margin-top:3px;display:flex;align-items:center;gap:6px}
+.evt-body .loc .svi{width:14px;height:14px;color:var(--mute)}
+.evt-pres{display:flex;gap:7px;margin-top:10px;flex-wrap:wrap}
+.chip{font-size:11.5px;font-weight:700;padding:4px 10px;border-radius:20px}
+.chip.p{background:var(--green-soft);color:var(--green-deep)}
+.chip.e{background:var(--gold-soft);color:var(--gold-deep)}
+.chip.i{background:var(--blue-soft);color:var(--blue-deep)}
+.evt-cta button{display:inline-flex;align-items:center;gap:7px;padding:9px 15px;border-radius:10px;font-weight:700;
+  font-size:13px;background:var(--card);border:1.5px solid var(--border)}
+.evt-cta button .svi{width:15px;height:15px}
+.evt-cta button:hover{border-color:var(--blue);background:var(--blue-soft)}
+
+/* ===== PROGRAMME ===== */
+.prog{display:grid;grid-template-columns:repeat(auto-fit,minmax(285px,1fr));gap:15px}
+.pcard{padding:20px}
+.pcard .kind{font-size:11px;font-weight:800;letter-spacing:1px;text-transform:uppercase;margin-bottom:11px;display:inline-block;padding:4px 10px;border-radius:20px}
+.kind.atelier{background:var(--blue-soft);color:var(--blue-deep)}
+.kind.interv{background:var(--green-soft);color:var(--green-deep)}
+.pcard h3{font-family:var(--display);font-size:16.5px;font-weight:700;margin-bottom:6px}
+.pcard .who{font-size:13px;color:var(--ink2);margin-bottom:10px}
+.pcard .desc{font-size:13px;color:var(--ink2);line-height:1.5}
+.pcard .meta{display:flex;gap:16px;margin-top:14px;font-size:12.5px;color:var(--mute);font-weight:600}
+.pcard .meta span{display:inline-flex;align-items:center;gap:6px}
+.pcard .meta .svi{width:14px;height:14px}
+
+/* ===== COCKPIT ===== */
+.ck-summary{display:flex;align-items:center;gap:20px;padding:16px 20px;margin-bottom:16px;flex-wrap:wrap}
+.ck-mini{display:flex;align-items:center;gap:11px}
+.ck-mini .km{width:40px;height:40px;border-radius:11px;display:grid;place-items:center}
+.ck-mini .km .svi{width:20px;height:20px}
+.ck-mini .n{font-family:var(--display);font-size:22px;font-weight:800;line-height:1}
+.ck-mini .l{font-size:11.5px;color:var(--ink2);font-weight:600}
+.ck-prog{flex:1;min-width:180px}
+.ck-prog .top{display:flex;justify-content:space-between;font-size:11.5px;font-weight:700;color:var(--ink2);margin-bottom:6px}
+.ck-prog .bar{height:8px;border-radius:20px;background:var(--border);overflow:hidden}
+.ck-prog .bar span{display:block;height:100%;background:linear-gradient(90deg,var(--green),var(--blue));transition:width .3s}
+.cockpit-grid{display:grid;grid-template-columns:1.3fr 1fr;gap:18px}
+@media(max-width:820px){.cockpit-grid{grid-template-columns:1fr}}
+.ck-panel{padding:20px}
+.ck-panel h3{font-family:var(--display);font-size:14px;font-weight:700;margin-bottom:4px;display:flex;align-items:center;gap:8px}
+.ck-panel h3 .svi{width:17px;height:17px;color:var(--blue-deep)}
+.ck-panel .hint{font-size:12px;color:var(--mute);margin-bottom:14px}
+.ck-search{display:flex;align-items:center;gap:9px;background:var(--bg);border:1.5px solid var(--border);border-radius:10px;padding:8px 12px;margin-bottom:10px}
+.ck-search .svi{width:16px;height:16px;color:var(--mute)}
+.ck-search input{border:none;background:none;outline:none;font-size:13.5px;width:100%}
+.ck-quick{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+.ck-quick button{font-size:12px;font-weight:700;padding:7px 12px;border-radius:9px;background:var(--bg);border:1.5px solid var(--border);color:var(--ink2);display:inline-flex;align-items:center;gap:6px}
+.ck-quick button .svi{width:14px;height:14px}
+.ck-quick button:hover{border-color:var(--green);color:var(--green-deep)}
+.live-list{display:flex;flex-direction:column;gap:2px;max-height:330px;overflow-y:auto}
+.live-row{display:flex;align-items:center;gap:11px;padding:9px 8px;border-radius:10px;transition:background .12s}
+.live-row:hover{background:var(--bg)}
+.lr-av{width:34px;height:34px;border-radius:9px;display:grid;place-items:center;font-family:var(--display);font-weight:800;font-size:12.5px;color:#fff;flex-shrink:0}
+.lr-nm{font-weight:700;font-size:13.5px;flex:1}
+.lr-nm small{display:block;font-weight:600;color:var(--mute);font-size:11.5px}
+.pres-toggle{display:flex;gap:4px}
+.pres-toggle button{width:32px;height:28px;border-radius:8px;display:grid;place-items:center;background:var(--bg);border:1.5px solid var(--border);transition:.12s}
+.pres-toggle button .svi{width:15px;height:15px}
+.pres-toggle button.on-p{background:var(--green);border-color:var(--green);color:#fff}
+.pres-toggle button.on-e{background:var(--gold);border-color:var(--gold);color:#fff}
+.ck-launch{display:flex;flex-direction:column;gap:11px}
+.big-btn{display:flex;align-items:center;gap:14px;padding:18px 20px;border-radius:14px;text-align:left;font-weight:700;transition:transform .12s,box-shadow .15s}
+.big-btn:hover{transform:translateY(-2px);box-shadow:var(--shadow-lg)}
+.big-btn .bi{width:46px;height:46px;border-radius:12px;display:grid;place-items:center;flex-shrink:0}
+.big-btn .bi .svi{width:22px;height:22px}
+.big-btn .bt{font-family:var(--display);font-size:16px}
+.big-btn .bs{font-size:12.5px;font-weight:600;opacity:.85;margin-top:1px}
+.big-btn.tour{background:var(--ink);color:#fff}
+.big-btn.tour .bi{background:rgba(255,255,255,.14)}
+.big-btn.proj{background:var(--card);border:1.5px solid var(--blue);color:var(--blue-deep)}
+.big-btn.proj .bi{background:var(--blue-soft)}
+.ck-today{display:flex;align-items:center;gap:11px;padding:13px 15px;border-radius:12px;background:var(--blue-soft);margin-top:12px}
+.ck-today .svi{width:18px;height:18px;color:var(--blue-deep);flex-shrink:0}
+.ck-today .tt{font-size:12.5px;font-weight:700;color:var(--blue-deep)}
+.ck-today .ss{font-size:11.5px;color:var(--ink2)}
+.ck-stars{margin-top:6px}
+.ck-stars .pick{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px}
+.ck-stars .pick button{font-size:12.5px;font-weight:700;padding:7px 12px;border-radius:20px;background:var(--bg);border:1.5px solid var(--border)}
+.ck-stars .pick button.sel{background:var(--gold-soft);border-color:var(--gold);color:var(--gold-deep)}
+
+/* ===== FOOTER ===== */
+.app-foot{border-top:1px solid var(--border);padding:18px clamp(14px,4vw,30px);background:var(--card)}
+.app-foot-in{max-width:1180px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
+.af-left{display:flex;align-items:center;gap:10px;font-size:12.5px;color:var(--ink2);font-weight:600}
+.af-demo{font-size:10px;font-weight:800;letter-spacing:1.4px;color:var(--gold-deep);background:var(--gold-soft);padding:4px 9px;border-radius:20px}
+.af-left b{color:var(--ink);font-weight:800}
+.af-right{display:flex;gap:16px;font-size:12px;color:var(--mute);font-weight:600}
+.af-right button:hover{color:var(--blue-deep)}
+
+/* ===== TOUR OVERLAY ===== */
+.tour{position:fixed;inset:0;z-index:60;background:linear-gradient(160deg,#16242e,#0c171e);color:#fff;display:none;flex-direction:column;animation:fade .3s}
+.tour.on{display:flex}
+.tour-top{display:flex;align-items:center;justify-content:space-between;padding:20px clamp(18px,5vw,40px)}
+.tour-top .brand{font-family:var(--display);font-weight:900;font-size:20px}
+.tour-top .brand .plus{color:var(--gold)}
+.tour-prog{font-size:13px;color:rgba(255,255,255,.6);font-weight:700;letter-spacing:.5px}
+.tour-close,.proj-close{width:40px;height:40px;border-radius:11px;background:rgba(255,255,255,.1);display:grid;place-items:center;transition:background .15s}
+.tour-close .svi,.proj-close .svi{width:18px;height:18px}
+.tour-close:hover,.proj-close:hover{background:rgba(255,255,255,.2)}
+.tour-main{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:26px;padding:10px 24px}
+.ring-wrap{position:relative;width:min(280px,68vw);aspect-ratio:1}
+.ring-wrap svg{width:100%;height:100%;transform:rotate(-90deg)}
+.ring-bg{fill:none;stroke:rgba(255,255,255,.1);stroke-width:9}
+.ring-fg{fill:none;stroke:var(--gold);stroke-width:9;stroke-linecap:round;transition:stroke-dashoffset 1s linear}
+.ring-fg.warn{stroke:var(--danger)}
+.ring-time{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.ring-time .t{font-family:var(--display);font-size:clamp(44px,11vw,64px);font-weight:900;line-height:1;font-variant-numeric:tabular-nums}
+.ring-time .l{font-size:12px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.5);font-weight:700}
+.tour-star{text-align:center}
+.tour-star .av{width:78px;height:78px;border-radius:20px;display:grid;place-items:center;font-family:var(--display);font-weight:800;font-size:30px;color:#fff;margin:0 auto 14px}
+.tour-star h2{font-family:var(--display);font-size:clamp(26px,5vw,38px);font-weight:800;letter-spacing:-.5px}
+.tour-star p{font-size:clamp(14px,2.5vw,17px);color:var(--gold);font-weight:700;margin-top:4px}
+.tour-star .co{font-size:14px;color:rgba(255,255,255,.6);margin-top:2px}
+.tour-ctrls{display:flex;gap:11px;padding:24px;flex-wrap:wrap;justify-content:center}
+.tc-btn{display:flex;align-items:center;gap:9px;padding:14px 24px;border-radius:13px;font-weight:700;font-size:15px;background:rgba(255,255,255,.1);transition:background .15s,transform .12s}
+.tc-btn .svi{width:18px;height:18px}
+.tc-btn:hover{background:rgba(255,255,255,.18);transform:translateY(-1px)}
+.tc-btn.next{background:var(--gold);color:var(--ink)}
+.tc-btn.next:hover{background:#e8b13d}
+.tour-plages{display:flex;gap:7px;justify-content:center;flex-wrap:wrap}
+.tour-plages button{padding:8px 15px;border-radius:20px;font-size:13px;font-weight:700;background:rgba(255,255,255,.08);transition:.14s}
+.tour-plages button.sel{background:rgba(220,162,44,.22);color:var(--gold)}
+
+/* ===== PROJECTION ===== */
+.proj{position:fixed;inset:0;z-index:70;background:radial-gradient(1400px 800px at 50% -20%,#1d3744,#0b151b);color:#fff;display:none;flex-direction:column;animation:fade .3s}
+.proj.on{display:flex}
+.proj-close{position:absolute;top:18px;right:20px;z-index:2}
+.proj-head{text-align:center;padding:clamp(22px,5vh,48px) 24px 0}
+.proj-head .brand{font-family:var(--display);font-weight:900;font-size:clamp(34px,6vw,56px);letter-spacing:-2px}
+.proj-head .brand .plus{color:var(--gold)}
+.proj-head .base{font-size:13px;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:rgba(255,255,255,.55);margin-top:4px}
+.proj-body{flex:1;display:flex;align-items:center;justify-content:center;gap:clamp(30px,7vw,90px);padding:24px;flex-wrap:wrap}
+.proj-stars{text-align:center}
+.proj-stars .lab{font-size:13px;font-weight:800;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:20px;display:flex;align-items:center;justify-content:center;gap:8px}
+.proj-stars .lab .svi{width:16px;height:16px}
+.proj-star-row{display:flex;gap:30px;justify-content:center;flex-wrap:wrap}
+.proj-star{text-align:center}
+.proj-star .av{width:clamp(96px,15vw,140px);aspect-ratio:1;border-radius:28px;display:grid;place-items:center;font-family:var(--display);font-weight:800;font-size:clamp(36px,6vw,52px);color:#fff;margin:0 auto 14px}
+.proj-star h3{font-family:var(--display);font-size:clamp(20px,3vw,28px);font-weight:800}
+.proj-star p{font-size:clamp(13px,1.8vw,16px);color:rgba(255,255,255,.7);margin-top:3px}
+.proj-qr{text-align:center}
+.proj-qr canvas{background:#fff;padding:14px;border-radius:18px;box-shadow:var(--shadow-lg)}
+.proj-qr .lab{font-size:14px;font-weight:700;margin-top:16px}
+.proj-qr .sub{font-size:12.5px;color:rgba(255,255,255,.55);margin-top:3px}
+.proj-foot{display:flex;justify-content:center;gap:clamp(24px,5vw,60px);padding:0 24px 14px;flex-wrap:wrap}
+.proj-stat{text-align:center}
+.proj-stat .n{font-family:var(--display);font-size:clamp(30px,4vw,42px);font-weight:900;line-height:1}
+.proj-stat .n.g{color:var(--green)}.proj-stat .n.y{color:var(--gold)}.proj-stat .n.b{color:#5aa9e6}
+.proj-stat .l{font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,.5);margin-top:5px}
+.proj-credit{text-align:center;padding:0 24px clamp(22px,4vh,40px);font-size:11.5px;color:rgba(255,255,255,.4);font-weight:600;letter-spacing:.5px}
+.proj-credit b{color:rgba(255,255,255,.6)}
+
+/* ===== OVERLAYS (accueil / mode admin) ===== */
+.overlay{position:fixed;inset:0;z-index:80;background:rgba(12,23,30,.55);backdrop-filter:blur(4px);
+  display:none;align-items:center;justify-content:center;padding:24px;animation:fade .3s}
+.overlay.on{display:flex}
+.wc-card{width:100%;max-width:480px;background:var(--card);border-radius:22px;box-shadow:var(--shadow-lg);
+  padding:34px 32px;animation:rise .4s ease both}
+.wc-badge{display:inline-flex;align-items:center;gap:7px;font-size:11px;font-weight:800;letter-spacing:.6px;
+  color:var(--blue-deep);background:var(--blue-soft);padding:6px 12px;border-radius:20px;margin-bottom:16px}
+.wc-badge .svi{width:14px;height:14px}
+.wc-card h2{font-family:var(--display);font-size:22px;font-weight:800;letter-spacing:-.4px;margin-bottom:8px}
+.wc-card .lead{font-size:14px;color:var(--ink2);margin-bottom:20px;line-height:1.55}
+.wc-list{display:flex;flex-direction:column;gap:13px;margin-bottom:24px}
+.wc-item{display:flex;gap:13px;align-items:flex-start}
+.wc-item .wi{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;flex-shrink:0}
+.wc-item .wi .svi{width:19px;height:19px}
+.wc-item .wt{font-weight:700;font-size:14px}
+.wc-item .ws{font-size:12.5px;color:var(--ink2);margin-top:1px;line-height:1.45}
+.wc-card .btn-primary{margin-top:0}
+.btn-ghost{width:100%;padding:13px;border-radius:var(--r-sm);font-weight:700;font-size:14px;color:var(--ink2);
+  background:var(--bg);border:1.5px solid var(--border);margin-top:9px;transition:.15s}
+.btn-ghost:hover{border-color:var(--ink2);color:var(--ink)}
+.btn-danger{width:100%;padding:14px;border-radius:var(--r-sm);font-weight:700;font-size:15px;color:#fff;
+  background:var(--danger);display:flex;align-items:center;justify-content:center;gap:8px;transition:.15s}
+.btn-danger .svi{width:17px;height:17px}
+.btn-danger:hover{background:#bf3a33}
+
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;
+  padding:13px 20px;border-radius:12px;font-size:14px;font-weight:600;box-shadow:var(--shadow-lg);opacity:0;
+  pointer-events:none;transition:opacity .25s,transform .25s;z-index:95;max-width:90vw}
+.toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+
+@keyframes fade{from{opacity:0}to{opacity:1}}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:560px){.next-meet{gap:14px}.nm-cta{margin-left:0;width:100%}.nm-cta button{width:100%;justify-content:center}.tb-meet{display:none}}
+</style>
+</head>
+<body>
+
+<!-- icon sprite -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<symbol id="ic-users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.2"/><path d="M3.5 19c0-3.1 2.5-5.3 5.5-5.3s5.5 2.2 5.5 5.3"/><path d="M16.5 5.6a3 3 0 010 5.6"/><path d="M17.5 13.9c2.3.4 3.9 2.4 3.9 5.1"/></symbol>
+<symbol id="ic-check" viewBox="0 0 24 24"><path d="M5 12.5l4.2 4.3L19 7"/></symbol>
+<symbol id="ic-excused" viewBox="0 0 24 24"><rect x="6" y="4" width="12" height="16" rx="2"/><path d="M9.5 4h5v2.5h-5z"/><path d="M9 11.5l1.6 1.6L14 9.7"/><path d="M9 16h6"/></symbol>
+<symbol id="ic-ticket" viewBox="0 0 24 24"><path d="M4 8a1.5 1.5 0 011.5-1.5h13A1.5 1.5 0 0120 8v1.2a1.8 1.8 0 000 5.6V16a1.5 1.5 0 01-1.5 1.5h-13A1.5 1.5 0 014 16v-1.2a1.8 1.8 0 000-5.6z"/><path d="M14 7v10" stroke-dasharray="1.2 2.4"/></symbol>
+<symbol id="ic-chart" viewBox="0 0 24 24"><path d="M4 20V5"/><path d="M4 20h16"/><rect x="7" y="13" width="3" height="4"/><rect x="12" y="9" width="3" height="8"/><rect x="17" y="6" width="3" height="11"/></symbol>
+<symbol id="ic-star" viewBox="0 0 24 24"><path d="M12 3.2l2.6 5.3 5.8.9-4.2 4.1 1 5.8-5.2-2.8-5.2 2.8 1-5.8L3.4 9.4l5.8-.9z"/></symbol>
+<symbol id="ic-phone" viewBox="0 0 24 24"><path d="M5 4h3.2l1.4 3.9-2 1.4a11.5 11.5 0 005.1 5.1l1.4-2 3.9 1.4V19a1.5 1.5 0 01-1.6 1.5A15.5 15.5 0 014 6.6 1.5 1.5 0 015 4z"/></symbol>
+<symbol id="ic-mail" viewBox="0 0 24 24"><rect x="3" y="5.5" width="18" height="13" rx="2"/><path d="M4 7l8 5.5L20 7"/></symbol>
+<symbol id="ic-chat" viewBox="0 0 24 24"><path d="M4.5 17.5L3.5 21l3.7-1A8 8 0 1020 13a8 8 0 00-15.5-2.7 8 8 0 000 7.2z"/></symbol>
+<symbol id="ic-id" viewBox="0 0 24 24"><rect x="3" y="5.5" width="18" height="13" rx="2"/><circle cx="8.5" cy="11" r="2"/><path d="M5.5 16c.4-1.6 1.6-2.3 3-2.3s2.6.7 3 2.3"/><path d="M14.5 10h4M14.5 13h4"/></symbol>
+<symbol id="ic-calendar" viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="15" rx="2"/><path d="M3.5 9.5h17M8 3v4M16 3v4"/></symbol>
+<symbol id="ic-list" viewBox="0 0 24 24"><path d="M9 6.5h11M9 12h11M9 17.5h11"/><circle cx="4.5" cy="6.5" r="1.1"/><circle cx="4.5" cy="12" r="1.1"/><circle cx="4.5" cy="17.5" r="1.1"/></symbol>
+<symbol id="ic-grid" viewBox="0 0 24 24"><rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/></symbol>
+<symbol id="ic-sliders" viewBox="0 0 24 24"><path d="M4 7h8M16 7h4M4 12h2M10 12h10M4 17h10M18 17h2"/><circle cx="14" cy="7" r="2.1"/><circle cx="8" cy="12" r="2.1"/><circle cx="16" cy="17" r="2.1"/></symbol>
+<symbol id="ic-install" viewBox="0 0 24 24"><path d="M12 4v10M8 11l4 4 4-4"/><path d="M5 19h14"/></symbol>
+<symbol id="ic-monitor" viewBox="0 0 24 24"><rect x="3.5" y="4.5" width="17" height="11" rx="2"/><path d="M8.5 20h7M12 15.5v4.5"/></symbol>
+<symbol id="ic-play" viewBox="0 0 24 24"><path d="M7 5.2v13.6l11-6.8z"/></symbol>
+<symbol id="ic-pause" viewBox="0 0 24 24"><rect x="7" y="5" width="3.4" height="14" rx="1"/><rect x="13.6" y="5" width="3.4" height="14" rx="1"/></symbol>
+<symbol id="ic-arrow" viewBox="0 0 24 24"><path d="M4 12h15M13 6l6 6-6 6"/></symbol>
+<symbol id="ic-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+<symbol id="ic-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.2-4.2"/></symbol>
+<symbol id="ic-pin" viewBox="0 0 24 24"><path d="M12 21s7-5.7 7-11a7 7 0 10-14 0c0 5.3 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></symbol>
+<symbol id="ic-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+<symbol id="ic-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M12 7.5V12l3 2"/></symbol>
+<symbol id="ic-gift" viewBox="0 0 24 24"><rect x="4" y="10" width="16" height="10" rx="1.5"/><path d="M3 7.5h18V10H3z"/><path d="M12 7.5V20"/><path d="M12 7.5C10.5 4.5 8.8 4.3 7.8 5.1 6.7 6 7.4 7.5 12 7.5z"/><path d="M12 7.5c1.5-3 3.2-3.2 4.2-2.4 1.1.9.4 2.4-4.2 2.4z"/></symbol>
+<symbol id="ic-sparkle" viewBox="0 0 24 24"><path d="M12 3.5l1.6 4.9 4.9 1.6-4.9 1.6L12 16.5l-1.6-4.9L5.5 10l4.9-1.6z"/><path d="M19 15l.7 2 2 .7-2 .7-.7 2-.7-2-2-.7 2-.7z"/></symbol>
+<symbol id="ic-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5.5M12 7.6v.2"/></symbol>
+<symbol id="ic-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1"/></symbol>
+<symbol id="ic-logout" viewBox="0 0 24 24"><path d="M14 5H6a1.5 1.5 0 00-1.5 1.5v11A1.5 1.5 0 006 19h8"/><path d="M14 12H20M17.5 9l3 3-3 3"/></symbol>
+<symbol id="ic-chev" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></symbol>
+</defs></svg>
+
+<!-- ============ LOGIN ============ -->
+<div class="login" id="login">
+  <div class="login-card">
+    <div style="text-align:center"><span class="demo-tag"><span class="dot"></span>DÉMONSTRATION</span></div>
+    <div class="brandmark"><b>BIZZ</b><span class="plus">+</span></div>
+    <div class="brand-base">Réseau d'affaires</div>
+    <h1>Accès au club</h1>
+    <p class="sub">Connexion multi-niveau — club, membre, admin ou visiteur</p>
+    <div class="field"><label>Code club</label><input id="f-club" value="BIZZPLUS" autocomplete="off"></div>
+    <div class="field"><label>Votre code membre</label><input id="f-mb" value="ANIMATEUR" autocomplete="off"></div>
+    <button class="btn-primary" onclick="enter()">Entrer dans le club</button>
+    <div class="login-hint">Démo prête à explorer — codes pré-remplis.<br>Admin&nbsp;: <b>ADMINBIZZ</b> · Visiteur&nbsp;: <b>INVITE</b></div>
+  </div>
+  <div class="login-foot">Mode démonstration · données fictives · Propulsé par <b>L'Rénov IA Studio</b></div>
+</div>
+
+<!-- ============ APP ============ -->
+<div class="app" id="app">
+  <header class="topbar">
+    <div class="topbar-in">
+      <div class="tb-brand"><b>BIZZ</b><span class="plus">+</span></div>
+      <button class="tb-role" onclick="openAdmin()" title="Mode animateur — cliquer pour en savoir plus"><svg class="svi"><use href="#ic-sliders"/></svg>Mode animateur<svg class="svi chev"><use href="#ic-chev"/></svg></button>
+      <span class="tb-demo">DÉMO</span>
+      <div class="tb-spacer"></div>
+      <div class="tb-meet"><span class="lab">Prochaine réunion</span><span class="val">jeu. 26 juin · 8h00</span></div>
+      <button class="tb-btn" onclick="toast('Installation de l&#39;app sur iPhone, Android ou PC — démo')"><svg class="svi"><use href="#ic-install"/></svg>Installer</button>
+      <button class="tb-btn proj" onclick="openProj()"><svg class="svi"><use href="#ic-monitor"/></svg>Projection</button>
+    </div>
+  </header>
+
+  <nav class="nav"><div class="nav-in" id="nav"></div></nav>
+
+  <main>
+    <!-- DASHBOARD -->
+    <section class="view on" id="v-dashboard">
+      <div class="vhead"><div><h2>Tableau de bord</h2><p>Vue d'ensemble du club et de la prochaine réunion</p></div></div>
+      <div class="next-meet card">
+        <div class="nm-date"><div class="d">26</div><div class="m">Juin</div></div>
+        <div class="nm-info"><div class="t">Prochaine réunion</div><h3>Petit-déjeuner business #142</h3>
+          <div class="l"><svg class="svi"><use href="#ic-pin"/></svg>Le Comptoir des Affaires · 12 quai des Marchands · 8h00 → 9h30</div></div>
+        <div class="nm-cta"><button onclick="toast('Inviter un contact à cette réunion — démo')"><svg class="svi"><use href="#ic-plus"/></svg>Inviter</button></div>
+      </div>
+      <div class="human-row">
+        <div class="hcard card">
+          <div class="hi i-blue"><svg class="svi"><use href="#ic-sparkle"/></svg></div>
+          <div><div class="lab">Prochain événement</div><h3>Soirée de rentrée du réseau</h3><div class="meta">jeu. 4 septembre · Rooftop Le Belvédère</div></div>
+        </div>
+        <div class="hcard card">
+          <div class="hi i-gold"><svg class="svi"><use href="#ic-gift"/></svg></div>
+          <div><div class="lab">L'anniversaire de la semaine</div><h3>Léa Brun</h3><div class="meta">jeudi · Studio Léa Brun</div></div>
+          <div class="act"><button onclick="toast('Message d&#39;anniversaire envoyé à Léa Brun — démo')"><svg class="svi"><use href="#ic-chat"/></svg>Souhaiter</button></div>
+        </div>
+      </div>
+      <div class="stats" id="stats"></div>
+      <div class="stars-card card">
+        <div class="ttl"><svg class="svi fill"><use href="#ic-star"/></svg>Star(s) du jour <span class="badge">2 PRÉSENTATEURS</span></div>
+        <div class="stars-grid" id="dash-stars"></div>
+      </div>
+    </section>
+
+    <!-- ANNUAIRE -->
+    <section class="view" id="v-annuaire">
+      <div class="vhead">
+        <div><h2>Annuaire</h2><p>Le trombinoscope du club — fiches, expertises et contact direct</p></div>
+        <div class="dir-toggle">
+          <button id="dt-cards" class="sel" onclick="setDirMode('cards')"><svg class="svi"><use href="#ic-grid"/></svg>Grille</button>
+          <button id="dt-list" onclick="setDirMode('list')"><svg class="svi"><use href="#ic-list"/></svg>Liste</button>
+        </div>
+      </div>
+      <div class="search"><svg class="svi"><use href="#ic-search"/></svg><input id="dir-search" placeholder="Rechercher un membre, un métier…" oninput="filterDir(this.value)"></div>
+      <div id="dir"></div>
+    </section>
+
+    <!-- CALENDRIER -->
+    <section class="view" id="v-calendrier">
+      <div class="vhead"><div><h2>Calendrier</h2><p>Les prochaines réunions, lieux et présences annoncées</p></div></div>
+      <div id="cal"></div>
+    </section>
+
+    <!-- PROGRAMME -->
+    <section class="view" id="v-programme">
+      <div class="vhead"><div><h2>Programme</h2><p>Les ateliers du club et les intervenants extérieurs</p></div></div>
+      <div class="prog" id="prog"></div>
+    </section>
+
+    <!-- COCKPIT -->
+    <section class="view" id="v-cockpit">
+      <div class="vhead"><div><h2>Cockpit</h2><p>Pilotage de la réunion en temps réel — réservé aux animateurs</p></div></div>
+      <div class="ck-summary card" id="ck-summary"></div>
+      <div class="cockpit-grid">
+        <div class="ck-panel card">
+          <h3><svg class="svi"><use href="#ic-users"/></svg>Présences en direct</h3>
+          <div class="hint">Pointez les membres à l'arrivée — les compteurs se mettent à jour partout</div>
+          <div class="ck-search"><svg class="svi"><use href="#ic-search"/></svg><input id="ck-search-in" placeholder="Filtrer un membre…" oninput="renderLive(this.value)"></div>
+          <div class="ck-quick">
+            <button onclick="markAll('p')"><svg class="svi"><use href="#ic-check"/></svg>Tout présent</button>
+            <button onclick="markAll('')"><svg class="svi"><use href="#ic-x"/></svg>Réinitialiser</button>
+          </div>
+          <div class="live-list" id="live"></div>
+        </div>
+        <div>
+          <div class="ck-panel card" style="margin-bottom:16px">
+            <h3><svg class="svi"><use href="#ic-play"/></svg>Animation</h3>
+            <div class="hint">Lancez le tour de table ou basculez sur grand écran</div>
+            <div class="ck-launch">
+              <button class="big-btn tour" onclick="openTour()"><span class="bi"><svg class="svi"><use href="#ic-play"/></svg></span><span><span class="bt">Tour de présentation</span><span class="bs">Chrono par membre · plages réglables</span></span></button>
+              <button class="big-btn proj" onclick="openProj()"><span class="bi"><svg class="svi"><use href="#ic-monitor"/></svg></span><span><span class="bt">Mode projection</span><span class="bs">Grand écran + QR visiteurs</span></span></button>
+            </div>
+            <div class="ck-today"><svg class="svi"><use href="#ic-target"/></svg><div><div class="tt">Atelier du jour · Pitch en 60 secondes</div><div class="ss">Animé par Antoine Mercier · 45 min</div></div></div>
+          </div>
+          <div class="ck-panel card ck-stars">
+            <h3><svg class="svi"><use href="#ic-star"/></svg>Star(s) du jour</h3>
+            <div class="hint">1 à 3 présentateurs mis à l'honneur</div>
+            <div class="pick" id="star-pick"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="app-foot">
+    <div class="app-foot-in">
+      <div class="af-left"><span class="af-demo">MODE DÉMO</span><span>Données 100% fictives · réseau de démonstration</span></div>
+      <div class="af-right">
+        <button onclick="toast('Mentions légales — réseau fictif présenté à titre de démonstration. Aucune donnée réelle.')">Mentions légales</button>
+        <span>Propulsé par <b style="color:var(--ink)">L'Rénov IA Studio</b></span>
+      </div>
+    </div>
+  </footer>
+</div>
+
+<!-- ============ TOUR ============ -->
+<div class="tour" id="tour">
+  <div class="tour-top">
+    <div class="brand">BIZZ<span class="plus">+</span></div>
+    <div class="tour-prog" id="tour-prog">Présentateur 1 / 18</div>
+    <button class="tour-close" onclick="closeTour()"><svg class="svi"><use href="#ic-x"/></svg></button>
+  </div>
+  <div class="tour-main">
+    <div class="ring-wrap">
+      <svg viewBox="0 0 200 200"><circle class="ring-bg" cx="100" cy="100" r="88"></circle><circle class="ring-fg" id="ring" cx="100" cy="100" r="88" stroke-dasharray="552.9" stroke-dashoffset="0"></circle></svg>
+      <div class="ring-time"><div class="t" id="tour-time">0:30</div><div class="l">restant</div></div>
+    </div>
+    <div class="tour-star">
+      <div class="av" id="tour-av">CA</div>
+      <h2 id="tour-name">Camille Aubert</h2>
+      <p id="tour-job">Architecte d'intérieur</p>
+      <div class="co" id="tour-co">Atelier Aubert</div>
+    </div>
+    <div class="tour-plages">
+      <button onclick="setPlage(30,this)" class="sel">30 s</button>
+      <button onclick="setPlage(60,this)">60 s</button>
+      <button onclick="setPlage(90,this)">90 s</button>
+      <button onclick="setPlage(120,this)">2 min</button>
+    </div>
+  </div>
+  <div class="tour-ctrls">
+    <button class="tc-btn" id="tour-pause" onclick="togglePause()"><svg class="svi"><use href="#ic-pause"/></svg><span id="tour-pause-lbl">Pause</span></button>
+    <button class="tc-btn next" onclick="nextStar()">Au suivant<svg class="svi"><use href="#ic-arrow"/></svg></button>
+  </div>
+</div>
+
+<!-- ============ PROJECTION ============ -->
+<div class="proj" id="proj">
+  <button class="proj-close" onclick="closeProj()"><svg class="svi"><use href="#ic-x"/></svg></button>
+  <div class="proj-head"><div class="brand">BIZZ<span class="plus">+</span></div><div class="base">Petit-déjeuner business #142</div></div>
+  <div class="proj-body">
+    <div class="proj-stars">
+      <div class="lab"><svg class="svi fill"><use href="#ic-star"/></svg>Star(s) du jour</div>
+      <div class="proj-star-row" id="proj-stars"></div>
+    </div>
+    <div class="proj-qr">
+      <canvas id="qr" width="180" height="180"></canvas>
+      <div class="lab">Rejoindre en visiteur</div>
+      <div class="sub">Scannez pour voir le programme</div>
+    </div>
+  </div>
+  <div class="proj-foot">
+    <div class="proj-stat"><div class="n g" id="pf-pres">18</div><div class="l">Présents</div></div>
+    <div class="proj-stat"><div class="n y" id="pf-exc">4</div><div class="l">Excusés</div></div>
+    <div class="proj-stat"><div class="n b" id="pf-inv">3</div><div class="l">Invités</div></div>
+  </div>
+  <div class="proj-credit">Mode démonstration · Propulsé par <b>L'Rénov IA Studio</b></div>
+</div>
+
+<!-- ============ ACCUEIL ANIMATEUR ============ -->
+<div class="overlay" id="welcome">
+  <div class="wc-card">
+    <span class="wc-badge"><svg class="svi"><use href="#ic-sliders"/></svg>MODE ANIMATEUR</span>
+    <h2>Bienvenue aux commandes</h2>
+    <p class="lead">Vous êtes connecté en animateur du club. C'est vous qui pilotez la réunion en direct depuis le Cockpit. Voici les trois leviers.</p>
+    <div class="wc-list">
+      <div class="wc-item"><div class="wi i-green"><svg class="svi"><use href="#ic-check"/></svg></div><div><div class="wt">Pointer les présences</div><div class="ws">Cochez présent ou excusé à l'arrivée — les compteurs se mettent à jour partout, y compris à l'écran.</div></div></div>
+      <div class="wc-item"><div class="wi i-gold"><svg class="svi"><use href="#ic-star"/></svg></div><div><div class="wt">Désigner les Star(s) du jour</div><div class="ws">1 à 3 membres mis à l'honneur, qui présentent leur activité devant le réseau.</div></div></div>
+      <div class="wc-item"><div class="wi i-blue"><svg class="svi"><use href="#ic-play"/></svg></div><div><div class="wt">Animer le tour & projeter</div><div class="ws">Lancez le tour de présentation chronométré, ou basculez sur grand écran avec le QR visiteurs.</div></div></div>
+    </div>
+    <button class="btn-primary" onclick="closeWelcome()">Découvrir le club</button>
+    <div style="text-align:center;font-size:11.5px;color:var(--mute);margin-top:14px;font-weight:600">Le badge « Mode animateur » en haut reste cliquable à tout moment.</div>
+  </div>
+</div>
+
+<!-- ============ INFO / QUITTER MODE ANIMATEUR ============ -->
+<div class="overlay" id="adminmode">
+  <div class="wc-card">
+    <span class="wc-badge"><svg class="svi"><use href="#ic-info"/></svg>MODE ANIMATEUR ACTIF</span>
+    <h2>Vous pilotez le club</h2>
+    <p class="lead">Le mode animateur (admin) débloque le Cockpit, le tour de présentation et le mode projection. Les membres connectés avec leur code personnel, eux, voient l'annuaire et le programme sans ces commandes.</p>
+    <div class="wc-list">
+      <div class="wc-item"><div class="wi i-blue"><svg class="svi"><use href="#ic-sliders"/></svg></div><div><div class="wt">Ce que vous débloquez</div><div class="ws">Cockpit de pilotage, pointage des présences, stars du jour, tour chronométré, projection grand écran.</div></div></div>
+      <div class="wc-item"><div class="wi i-gold"><svg class="svi"><use href="#ic-logout"/></svg></div><div><div class="wt">Quitter le mode animateur</div><div class="ws">Déconnectez-vous pour revenir à l'écran d'accès, puis reconnectez-vous avec un code membre ou visiteur.</div></div></div>
+    </div>
+    <button class="btn-danger" onclick="logout()"><svg class="svi"><use href="#ic-logout"/></svg>Quitter le mode animateur</button>
+    <button class="btn-ghost" onclick="closeAdmin()">Rester en pilotage</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============ DONNÉES FICTIVES ============ */
+const PALETTE=['#1f6fb2','#159a73','#dca22c','#134e80','#0d7457','#b67f14','#2c8ac4','#1aa882'];
+function color(i){return PALETTE[i%PALETTE.length];}
+function initials(n){return n.split(' ').map(w=>w[0]).slice(0,2).join('').toUpperCase();}
+function ic(n,c){return '<svg class="svi '+(c||'')+'"><use href="#ic-'+n+'"/></svg>';}
+
+const MEMBERS=[
+ {n:'Camille Aubert', j:"Architecte d'intérieur", c:'Atelier Aubert', e:"Agencement d'espaces pro et commerces", pres:'p'},
+ {n:'Thomas Renard', j:'Expert-comptable', c:'Renard & Associés', e:'Optimisation et pilotage des TPE/PME', pres:'p'},
+ {n:'Inès Khelifi', j:"Avocate d'affaires", c:'Cabinet Khelifi', e:'Droit des sociétés et contrats commerciaux', pres:'p'},
+ {n:'Marc Dasseville', j:'Courtier en assurances', c:'MD Assurances', e:'Prévoyance et garanties pour dirigeants', pres:'e'},
+ {n:'Sofia Lemoine', j:'Consultante RH', c:'Lemoine Conseil', e:'Recrutement et marque employeur', pres:'p'},
+ {n:'Hugo Vasseur', j:'Agent immobilier', c:'Vasseur Immobilier', e:'Locaux commerciaux et investissement', pres:'p'},
+ {n:'Léa Brun', j:'Photographe corporate', c:'Studio Léa Brun', e:"Portraits pro et reportages d'entreprise", pres:'p'},
+ {n:'Karim Benali', j:'Développeur web', c:'Benali Digital', e:'Sites vitrines et outils métier sur-mesure', pres:'e'},
+ {n:'Nathalie Petit', j:'Notaire', c:'Étude Petit', e:"Transmission d'entreprise et patrimoine", pres:'p'},
+ {n:'Antoine Mercier', j:'Coach business', c:'Mercier Coaching', e:'Accompagnement des dirigeants', pres:'p'},
+ {n:'Julie Faure', j:'Graphiste', c:'Faure Studio', e:'Identité visuelle et supports de com', pres:'p'},
+ {n:'Pierre Lacroix', j:'Banquier pro', c:'Crédit des Entrepreneurs', e:'Financement et trésorerie', pres:'e'},
+ {n:'Émilie Roy', j:'Traiteur événementiel', c:'Roy Réceptions', e:"Séminaires et réceptions d'affaires", pres:'p'},
+ {n:'Damien Olivier', j:'Imprimeur', c:'Olivier Print', e:'Print pro, signalétique, PLV', pres:'p'},
+];
+MEMBERS.forEach((m,i)=>{m.col=color(i);m.tel='06'+String(12000000+i*1111111).slice(0,8);});
+
+function email(m){return m.n.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/ /g,'.')+'@bizzplus-demo.fr';}
+function fmtTel(t){return t.replace(/(\d{2})(?=\d)/g,'$1 ').trim();}
+function waNum(t){return '33'+t.replace(/\D/g,'').replace(/^0/,'');}
+
+let STARS=[0,1];
+
+const EVENTS=[
+ {d:'26',m:'Juin',t:'Petit-déjeuner business #142',l:'Le Comptoir des Affaires · 8h00',p:18,e:4,i:3},
+ {d:'10',m:'Juil',t:'Petit-déjeuner business #143',l:'Le Comptoir des Affaires · 8h00',p:15,e:5,i:2},
+ {d:'04',m:'Sept',t:'Soirée de rentrée du réseau',l:'Rooftop Le Belvédère · 19h00',p:21,e:2,i:6},
+ {d:'18',m:'Sept',t:'Petit-déjeuner business #144',l:'Le Comptoir des Affaires · 8h00',p:12,e:3,i:1},
+];
+
+const PROGRAMME=[
+ {k:'atelier',kl:'Atelier',t:'Pitch en 60 secondes',w:'Animé par Antoine Mercier',desc:'Construire une présentation claire et percutante de son activité pour le tour de table.',dur:'45 min',date:'26 juin'},
+ {k:'atelier',kl:'Atelier',t:'Je performe sur LinkedIn',w:'Animé par Julie Faure',desc:'Optimiser son profil, publier juste et transformer ses vues en rendez-vous business.',dur:'1 h',date:'10 juillet'},
+ {k:'interv',kl:'Intervenant',t:'Réussir sa visibilité locale',w:'Marion Texier · agence Cap&Co',desc:'Google Business, avis clients et presse locale : être trouvé là où vos clients cherchent.',dur:'40 min',date:'4 septembre'},
+ {k:'atelier',kl:'Atelier',t:'Piloter sa trésorerie sans stress',w:'Animé par Thomas Renard',desc:'Lire son tableau de bord, anticiper les creux et garder la main sur son cash.',dur:'50 min',date:'18 septembre'},
+];
+
+const VIEWS=[
+ {id:'dashboard',label:'Tableau de bord',i:'chart'},
+ {id:'annuaire',label:'Annuaire',i:'users'},
+ {id:'calendrier',label:'Calendrier',i:'calendar'},
+ {id:'programme',label:'Programme',i:'list'},
+ {id:'cockpit',label:'Cockpit',i:'sliders'},
+];
+let dirMode='cards';
+
+/* ============ NAV ============ */
+function buildNav(){
+  document.getElementById('nav').innerHTML=VIEWS.map((v,k)=>
+    `<button class="${k===0?'act':''}" onclick="go('${v.id}',this)">${ic(v.i)}${v.label}</button>`).join('');
+}
+function go(id,btn){
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('on'));
+  document.getElementById('v-'+id).classList.add('on');
+  document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('act'));
+  if(btn)btn.classList.add('act');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+/* ============ LOGIN / ACCUEIL / MODE ============ */
+function enter(){
+  document.getElementById('login').style.display='none';
+  document.getElementById('app').classList.add('on');
+  renderAll();
+  document.getElementById('welcome').classList.add('on');
+}
+function closeWelcome(){document.getElementById('welcome').classList.remove('on');}
+function openAdmin(){document.getElementById('adminmode').classList.add('on');}
+function closeAdmin(){document.getElementById('adminmode').classList.remove('on');}
+function logout(){
+  closeAdmin();
+  document.getElementById('app').classList.remove('on');
+  document.getElementById('login').style.display='flex';
+  window.scrollTo({top:0});
+  toast('Déconnecté du mode animateur');
+}
+
+/* ============ CONTACT RÉEL ============ */
+function callTel(t){window.location.href='tel:+33'+t.replace(/^0/,'');}
+function mailTo(e){window.location.href='mailto:'+e;}
+function waOpen(name){
+  const m=MEMBERS.find(x=>x.n===name);if(!m)return;
+  const msg=encodeURIComponent('Bonjour '+name.split(' ')[0]+', je vous contacte via le réseau BIZZ+. ');
+  window.open('https://wa.me/'+waNum(m.tel)+'?text='+msg,'_blank');
+}
+function vcard(name){
+  const m=MEMBERS.find(x=>x.n===name);if(!m)return;
+  const parts=m.n.split(' ');
+  const vcf=['BEGIN:VCARD','VERSION:3.0','FN:'+m.n,'N:'+(parts[1]||'')+';'+parts[0],'ORG:'+m.c,'TITLE:'+m.j,
+    'TEL;TYPE=CELL:+33'+m.tel.replace(/^0/,''),'EMAIL:'+email(m),'NOTE:Membre du réseau BIZZ+ (démonstration)','END:VCARD'].join('\r\n');
+  const blob=new Blob([vcf],{type:'text/vcard;charset=utf-8'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');a.href=url;a.download=m.n.replace(/ /g,'_')+'.vcf';
+  document.body.appendChild(a);a.click();a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),1500);
+  toast('Carte de visite de '+m.n+' téléchargée');
+}
+
+/* ============ RENDER ============ */
+function presentCount(){return MEMBERS.filter(m=>m.pres==='p').length;}
+function excusedCount(){return MEMBERS.filter(m=>m.pres==='e').length;}
+function pendingCount(){return MEMBERS.filter(m=>!m.pres).length;}
+
+function renderStats(){
+  const p=presentCount(),e=excusedCount(),tot=MEMBERS.length;
+  const s=[
+   {ic:'users',c:'i-blue',n:tot,l:'Membres'},
+   {ic:'check',c:'i-green',n:p,l:'Présents'},
+   {ic:'excused',c:'i-gold',n:e,l:'Excusés'},
+   {ic:'ticket',c:'i-mute',n:3,l:'Invités annoncés'},
+  ];
+  document.getElementById('stats').innerHTML=s.map(x=>
+   `<div class="stat card"><div class="chip ${x.c}">${ic(x.ic)}</div><div class="n">${x.n}</div><div class="lab">${x.l}</div></div>`).join('');
+}
+function renderDashStars(){
+  document.getElementById('dash-stars').innerHTML=STARS.map(i=>{const m=MEMBERS[i];return
+   `<div class="star"><div class="av" style="background:${m.col}">${initials(m.n)}</div>
+    <div><div class="nm">${m.n}</div><div class="mt">${m.j} · ${m.c}</div><div class="tg">${ic('star','fill')}Présente son activité aujourd'hui</div></div></div>`;}).join('');
+}
+/* annuaire — grille */
+function memberCard(m){
+  return `<div class="mcard card">
+    <div class="mc-top"><div class="mc-av" style="background:${m.col}">${initials(m.n)}</div>
+      <div><div class="mc-nm">${m.n}</div><div class="mc-jb">${m.j}</div><div class="mc-co">${m.c}</div></div></div>
+    <div class="mc-exp">${m.e}</div>
+    <div class="mc-acts">
+      <button class="tel" title="Appeler" onclick="callTel('${m.tel}')">${ic('phone')}</button>
+      <button class="mail" title="Email" onclick="mailTo('${email(m)}')">${ic('mail')}</button>
+      <button class="wa" title="WhatsApp" onclick="waOpen('${m.n}')">${ic('chat')}</button>
+      <button class="vc" title="Carte de visite" onclick="vcard('${m.n}')">${ic('id')}</button>
+    </div></div>`;
+}
+/* annuaire — liste (coordonnées visibles) */
+function memberRow(m){
+  return `<div class="drow">
+    <div class="dr-av" style="background:${m.col}">${initials(m.n)}</div>
+    <div class="dr-id"><div class="nm">${m.n}</div><div class="jb">${m.j}</div><div class="co">${m.c}</div></div>
+    <div class="dr-coord">
+      <a href="tel:+33${m.tel.replace(/^0/,'')}">${ic('phone')}${fmtTel(m.tel)}</a>
+      <a href="mailto:${email(m)}">${ic('mail')}${email(m)}</a>
+    </div>
+    <div class="dr-acts">
+      <button class="wa" title="WhatsApp" onclick="waOpen('${m.n}')">${ic('chat')}</button>
+      <button class="vc" title="Carte de visite" onclick="vcard('${m.n}')">${ic('id')}</button>
+    </div></div>`;
+}
+function setDirMode(mode){
+  dirMode=mode;
+  document.getElementById('dt-cards').classList.toggle('sel',mode==='cards');
+  document.getElementById('dt-list').classList.toggle('sel',mode==='list');
+  filterDir(document.getElementById('dir-search').value);
+}
+function renderDir(list){
+  const el=document.getElementById('dir');
+  if(dirMode==='list'){el.className='dlist card';el.innerHTML=list.map(memberRow).join('');}
+  else{el.className='dir';el.innerHTML=list.map(memberCard).join('');}
+}
+function filterDir(q){q=(q||'').toLowerCase().trim();renderDir(MEMBERS.filter(m=>(m.n+' '+m.j+' '+m.c+' '+m.e).toLowerCase().includes(q)));}
+function renderCal(){
+  document.getElementById('cal').innerHTML=EVENTS.map(ev=>
+   `<div class="evt card">
+     <div class="evt-date"><div class="d">${ev.d}</div><div class="m">${ev.m}</div></div>
+     <div class="evt-body"><h3>${ev.t}</h3><div class="loc">${ic('pin')}${ev.l}</div>
+       <div class="evt-pres"><span class="chip p">${ev.p} présents</span><span class="chip e">${ev.e} excusés</span><span class="chip i">${ev.i} invités</span></div></div>
+     <div class="evt-cta"><button onclick="toast('Inviter un contact — démo')">${ic('plus')}Inviter</button></div></div>`).join('');
+}
+function renderProg(){
+  document.getElementById('prog').innerHTML=PROGRAMME.map(p=>
+   `<div class="pcard card"><span class="kind ${p.k}">${p.kl}</span>
+     <h3>${p.t}</h3><div class="who">${p.w}</div><div class="desc">${p.desc}</div>
+     <div class="meta"><span>${ic('clock')}${p.dur}</span><span>${ic('calendar')}${p.date}</span></div></div>`).join('');
+}
+/* cockpit */
+function renderCkSummary(){
+  const p=presentCount(),e=excusedCount(),pd=pendingCount(),tot=MEMBERS.length,done=p+e,pct=Math.round(done/tot*100);
+  document.getElementById('ck-summary').innerHTML=
+   `<div class="ck-mini"><div class="km i-green">${ic('check')}</div><div><div class="n">${p}</div><div class="l">Présents</div></div></div>
+    <div class="ck-mini"><div class="km i-gold">${ic('excused')}</div><div><div class="n">${e}</div><div class="l">Excusés</div></div></div>
+    <div class="ck-mini"><div class="km i-mute">${ic('clock')}</div><div><div class="n">${pd}</div><div class="l">À pointer</div></div></div>
+    <div class="ck-prog"><div class="top"><span>Pointage de la réunion</span><span>${done}/${tot}</span></div><div class="bar"><span style="width:${pct}%"></span></div></div>`;
+}
+function renderLive(filter){
+  filter=(filter||'').toLowerCase().trim();
+  const rows=MEMBERS.map((m,i)=>({m,i})).filter(o=>(o.m.n+' '+o.m.j).toLowerCase().includes(filter));
+  document.getElementById('live').innerHTML=rows.map(o=>{const m=o.m,i=o.i;return
+   `<div class="live-row"><div class="lr-av" style="background:${m.col}">${initials(m.n)}</div>
+     <div class="lr-nm">${m.n}<small>${m.j}</small></div>
+     <div class="pres-toggle">
+       <button class="${m.pres==='p'?'on-p':''}" onclick="setPres(${i},'p')" title="Présent">${ic('check')}</button>
+       <button class="${m.pres==='e'?'on-e':''}" onclick="setPres(${i},'e')" title="Excusé">${ic('excused')}</button>
+     </div></div>`;}).join('');
+}
+function setPres(i,v){MEMBERS[i].pres=(MEMBERS[i].pres===v?'':v);refreshLive();}
+function markAll(v){MEMBERS.forEach(m=>m.pres=v);refreshLive();}
+function refreshLive(){renderLive(document.getElementById('ck-search-in').value);renderStats();renderCkSummary();}
+function renderStarPick(){
+  document.getElementById('star-pick').innerHTML=MEMBERS.map((m,i)=>
+   `<button class="${STARS.includes(i)?'sel':''}" onclick="toggleStar(${i})">${m.n.split(' ')[0]}</button>`).join('');
+}
+function toggleStar(i){
+  if(STARS.includes(i))STARS=STARS.filter(x=>x!==i);
+  else{if(STARS.length>=3){toast('Maximum 3 stars du jour');return;}STARS.push(i);}
+  renderStarPick();renderDashStars();
+}
+function renderAll(){buildNav();renderStats();renderDashStars();setDirMode('cards');renderCal();renderProg();renderLive('');renderStarPick();renderCkSummary();}
+
+/* ============ TOUR ============ */
+let tIdx=0,tDur=30,tLeft=30,tInt=null,tPaused=false;
+const RING_LEN=2*Math.PI*88;
+function presentList(){return MEMBERS.filter(m=>m.pres==='p');}
+function openTour(){
+  if(!presentList().length){toast('Aucun membre présent à pointer');return;}
+  tIdx=0;tDur=30;setPlageVal(30);
+  document.getElementById('tour').classList.add('on');
+  loadStar();startTimer();
+}
+function closeTour(){document.getElementById('tour').classList.remove('on');clearInterval(tInt);}
+function loadStar(){
+  const list=presentList();const m=list[tIdx%list.length];
+  const av=document.getElementById('tour-av');
+  av.textContent=initials(m.n);av.style.background=m.col;
+  document.getElementById('tour-name').textContent=m.n;
+  document.getElementById('tour-job').textContent=m.j;
+  document.getElementById('tour-co').textContent=m.c;
+  document.getElementById('tour-prog').textContent=`Présentateur ${(tIdx%list.length)+1} / ${list.length}`;
+  tLeft=tDur;updateRing();
+}
+function updateRing(){
+  const mm=Math.floor(tLeft/60),ss=tLeft%60;
+  document.getElementById('tour-time').textContent=mm+':'+String(ss).padStart(2,'0');
+  const ring=document.getElementById('ring');
+  ring.style.strokeDashoffset=RING_LEN*(1-tLeft/tDur);
+  ring.classList.toggle('warn',tLeft<=5);
+}
+function startTimer(){
+  clearInterval(tInt);tPaused=false;
+  document.getElementById('tour-pause').querySelector('use').setAttribute('href','#ic-pause');
+  document.getElementById('tour-pause-lbl').textContent='Pause';
+  tInt=setInterval(()=>{
+    if(tPaused)return;
+    tLeft--;updateRing();
+    if(tLeft<=0){clearInterval(tInt);toast('Temps écoulé — au suivant');setTimeout(nextStar,600);}
+  },1000);
+}
+function togglePause(){
+  tPaused=!tPaused;
+  document.getElementById('tour-pause').querySelector('use').setAttribute('href',tPaused?'#ic-play':'#ic-pause');
+  document.getElementById('tour-pause-lbl').textContent=tPaused?'Reprendre':'Pause';
+}
+function nextStar(){tIdx++;loadStar();startTimer();}
+function setPlage(s,btn){tDur=s;document.querySelectorAll('.tour-plages button').forEach(b=>b.classList.remove('sel'));btn.classList.add('sel');tLeft=s;updateRing();}
+function setPlageVal(s){tDur=s;const arr=[30,60,90,120];document.querySelectorAll('.tour-plages button').forEach((b,i)=>b.classList.toggle('sel',arr[i]===s));}
+
+/* ============ PROJECTION ============ */
+function openProj(){
+  document.getElementById('proj').classList.add('on');
+  document.getElementById('proj-stars').innerHTML=STARS.map(i=>{const m=MEMBERS[i];return
+   `<div class="proj-star"><div class="av" style="background:${m.col}">${initials(m.n)}</div><h3>${m.n}</h3><p>${m.j}</p></div>`;}).join('');
+  document.getElementById('pf-pres').textContent=presentCount();
+  document.getElementById('pf-exc').textContent=excusedCount();
+  drawQR();
+}
+function closeProj(){document.getElementById('proj').classList.remove('on');}
+function drawQR(){
+  const c=document.getElementById('qr'),ctx=c.getContext('2d'),N=25,cell=c.width/N;
+  ctx.fillStyle='#fff';ctx.fillRect(0,0,c.width,c.height);ctx.fillStyle='#16242e';
+  let seed=987654;const rnd=()=>{seed=(seed*1103515245+12345)&0x7fffffff;return seed/0x7fffffff;};
+  for(let y=0;y<N;y++)for(let x=0;x<N;x++){if(rnd()>0.52)ctx.fillRect(x*cell,y*cell,cell,cell);}
+  ctx.fillStyle='#fff';ctx.fillRect(0,0,8*cell,8*cell);ctx.fillRect((N-8)*cell,0,8*cell,8*cell);ctx.fillRect(0,(N-8)*cell,8*cell,8*cell);
+  const finder=(ox,oy)=>{ctx.fillStyle='#16242e';ctx.fillRect(ox*cell,oy*cell,7*cell,7*cell);ctx.fillStyle='#fff';ctx.fillRect((ox+1)*cell,(oy+1)*cell,5*cell,5*cell);ctx.fillStyle='#16242e';ctx.fillRect((ox+2)*cell,(oy+2)*cell,3*cell,3*cell);};
+  finder(0,0);finder(N-7,0);finder(0,N-7);
+}
+
+/* ============ TOAST + RACCOURCIS ============ */
+let toastT;
+function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('on');clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('on'),2600);}
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeProj();closeTour();closeWelcome();closeAdmin();}});
+</script>
+</body>
+</html>
